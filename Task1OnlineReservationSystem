@@ -1,0 +1,125 @@
+import java.util.Scanner;
+
+public class OnlineReservationSystem {
+    private static String[][] database = new String[100][7];
+    private static int count = 0;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Welcome to the Online Reservation System");
+
+        while (true) {
+            System.out.println("\n1. Login");
+            System.out.println("2. Exit");
+            System.out.print("\nEnter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    login(scanner);
+                    break;
+                case 2:
+                    System.out.println("Exiting the program...");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+
+    private static void login(Scanner scanner) {
+        System.out.print("\nEnter your login ID: ");
+        String loginId = scanner.next();
+        System.out.print("Enter your password: ");
+        String password = scanner.next();
+
+        // You can add your own login validation logic here
+
+        System.out.println("\nLogin successful!");
+        showReservationMenu(scanner);
+    }
+
+    private static void showReservationMenu(Scanner scanner) {
+        while (true) {
+            System.out.println("\nReservation Menu");
+            System.out.println("\n1. Make a Reservation");
+            System.out.println("2. Cancel a Reservation");
+            System.out.println("3. Logout");
+            System.out.print("\nEnter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    makeReservation(scanner);
+                    break;
+                case 2:
+                    cancelReservation(scanner);
+                    break;
+                case 3:
+                    System.out.println("\nLogging out...");
+                    return;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+
+    private static void makeReservation(Scanner scanner) {
+        System.out.print("\nEnter your Name: ");
+        String basicDetails = scanner.next();
+        System.out.print("Enter the train number: ");
+        String trainNumber = scanner.next();
+        System.out.print("Enter the class type: ");
+        String classType = scanner.next();
+        System.out.print("Enter the date of journey: ");
+        String dateOfJourney = scanner.next();
+        System.out.print("Enter the source station: ");
+        String sourceStation = scanner.next();
+        System.out.print("Enter the destination station: ");
+        String destinationStation = scanner.next();
+
+        database[count][0] = basicDetails;
+        database[count][1] = trainNumber;
+        database[count][2] = classType;
+        database[count][3] = dateOfJourney;
+        database[count][4] = sourceStation;
+        database[count][5] = destinationStation;
+
+        System.out.println("\nReservation successful! Your reservation ID is: " + count);
+        count++;
+    }
+
+    private static void cancelReservation(Scanner scanner) {
+        System.out.print("\nEnter your reservation ID (PNR number): ");
+        int reservationId = scanner.nextInt();
+
+        if (reservationId >= 0 && reservationId < count) {
+            System.out.println("\nReservation details:");
+            System.out.println("Basic Details: " + database[reservationId][0]);
+            System.out.println("Train Number: " + database[reservationId][1]);
+            System.out.println("Class Type: " + database[reservationId][2]);
+            System.out.println("Date of Journey: " + database[reservationId][3]);
+            System.out.println("Source Station: " + database[reservationId][4]);
+            System.out.println("Destination Station: " + database[reservationId][5]);
+
+            System.out.print("\nAre you sure you want to cancel this reservation? (Press 'Y' for Yes, 'N' for No): ");
+            String confirmation = scanner.next();
+
+            if (confirmation.equalsIgnoreCase("Y")) {
+                // Delete the reservation from the database
+                for (int i = reservationId; i < count - 1; i++) {
+                    database[i] = database[i + 1];
+                }
+                count--;
+
+                System.out.println("Reservation cancelled successfully!");
+            } else {
+                System.out.println("Reservation cancellation aborted.");
+            }
+        } else {
+            System.out.println("Invalid reservation ID!");
+        }
+    }
+}
