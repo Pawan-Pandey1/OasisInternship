@@ -1,0 +1,201 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+class User {
+    private String username;
+    private String password;
+    private String profile;
+
+    public User(String username, String password, String profile) {
+        this.username = username;
+        this.password = password;
+        this.profile = profile;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+}
+
+class ExaminationSystem {
+    private Map<String, User> users;
+    private User loggedInUser;
+    private boolean isLoggedIn;
+
+    public ExaminationSystem() {
+        users = new HashMap<>();
+        users.put("user1", new User("user1", "password1", "Student"));
+        users.put("user2", new User("user2", "password2", "Teacher"));
+        // Add more users if needed
+
+        loggedInUser = null;
+        isLoggedIn = false;
+    }
+
+    public boolean login(String username, String password) {
+        User user = users.get(username);
+        if (user != null && user.getPassword().equals(password)) {
+            loggedInUser = user;
+            isLoggedIn = true;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void updateProfile(String newProfile) {
+        if (loggedInUser != null) {
+            loggedInUser = new User(loggedInUser.getUsername(), loggedInUser.getPassword(), newProfile);
+            System.out.println("Profile updated successfully!");
+        } else {
+            System.out.println("No user is currently logged in!");
+        }
+    }
+
+    public void updatePassword(String newPassword) {
+        if (loggedInUser != null) {
+            loggedInUser = new User(loggedInUser.getUsername(), newPassword, loggedInUser.getProfile());
+            System.out.println("Password updated successfully!");
+        } else {
+            System.out.println("No user is currently logged in!");
+        }
+    }
+
+    public void selectAnswers() {
+        if (loggedInUser != null) {
+            // Implement answer selection logic here
+            System.out.println("Answers selected successfully!");
+        } else {
+            System.out.println("No user is currently logged in!");
+        }
+    }
+
+    public void startTimer() {
+        if (loggedInUser != null) {
+            // Implement timer logic here
+            System.out.println("Timer started!");
+        } else {
+            System.out.println("No user is currently logged in!");
+        }
+    }
+
+    public void autoSubmit() {
+        if (loggedInUser != null) {
+            // Implement auto submit logic here
+            System.out.println("Exam submitted automatically!");
+        } else {
+            System.out.println("No user is currently logged in!");
+        }
+    }
+
+    public void closeSession() {
+        if (loggedInUser != null) {
+            loggedInUser = null;
+            isLoggedIn = false;
+            System.out.println("Session closed successfully!");
+        } else {
+            System.out.println("No user is currently logged in!");
+        }
+    }
+}
+
+public class OnlineExaminationInterface {
+    private static Scanner scanner = new Scanner(System.in);
+    private static ExaminationSystem examinationSystem = new ExaminationSystem();
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to the Online Examination System!");
+
+        while (true) {
+            System.out.print("Enter your username: ");
+            String username = scanner.nextLine();
+            System.out.print("Enter your password: ");
+            String password = scanner.nextLine();
+
+            if (examinationSystem.login(username, password)) {
+                System.out.println("Login successful!");
+                showMainMenu();
+                break;
+            } else {
+                System.out.println("Invalid username or password. Please try again.");
+            }
+        }
+    }
+
+    private static void showMainMenu() {
+        boolean quit = false;
+
+        while (!quit) {
+            System.out.println("\nMain Menu");
+            System.out.println("1. Update Profile");
+            System.out.println("2. Update Password");
+            System.out.println("3. Select Answers for MCQs");
+            System.out.println("4. Start Timer and Auto Submit");
+            System.out.println("5. Close Session and Logout");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character
+
+            switch (choice) {
+                case 1:
+                    updateProfile();
+                    break;
+                case 2:
+                    updatePassword();
+                    break;
+                case 3:
+                    selectAnswers();
+                    break;
+                case 4:
+                    startTimerAndAutoSubmit();
+                    break;
+                case 5:
+                    closeSessionAndLogout();
+                    quit = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+
+    private static void updateProfile() {
+        System.out.print("\nEnter your new profile: ");
+        String newProfile = scanner.nextLine();
+
+        examinationSystem.updateProfile(newProfile);
+    }
+
+    private static void updatePassword() {
+        System.out.print("\nEnter your new password: ");
+        String newPassword = scanner.nextLine();
+
+        examinationSystem.updatePassword(newPassword);
+    }
+
+    private static void selectAnswers() {
+        examinationSystem.selectAnswers();
+    }
+
+    private static void startTimerAndAutoSubmit() {
+        examinationSystem.startTimer();
+        examinationSystem.autoSubmit();
+    }
+
+    private static void closeSessionAndLogout() {
+        examinationSystem.closeSession();
+        System.out.println("Logged out successfully!");
+    }
+}
